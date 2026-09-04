@@ -1,0 +1,42 @@
+[project]
+name = "cwhost"
+version = "0.1.0"
+description = "Headless host for CodeWarrior PowerPC compiler plug-ins."
+readme = "README.md"
+authors = [
+    { name = "Marijn van der Werf", email = "marijn.vanderwerf@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "unicorn>=2.1.4",
+    "xattr>=1.3.0",
+]
+
+[project.scripts]
+cwcc = "cwhost.cli.cwcc:main"
+
+[build-system]
+requires = ["uv_build>=0.12.5,<0.13.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+    "ruff>=0.16.5",
+    "ty>=0.0.75",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I", "UP", "B", "SIM", "PIE", "PLW", "TRY", "RUF"]
+# Host errors deliberately carry the shim name and offending argument.
+ignore = ["TRY003"]
+
+[tool.ruff.lint.per-file-ignores]
+# The shim modules are imported after the registry they populate is defined.
+"src/cwhost/carbon/__init__.py" = ["E402"]
+
+[tool.ty.src]
+include = ["src"]

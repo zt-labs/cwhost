@@ -1,0 +1,1 @@
+-dialect c -requireprotos -strict on -iso_templates on -prefix "" -w iserror

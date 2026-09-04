@@ -1,0 +1,1 @@
+-dialect c -requireprotos -strict on -mapcr off -iso_templates on -prefix "" -inline none -w iserror -opt level=0 -traceback inline -noschedule -fno-peephole

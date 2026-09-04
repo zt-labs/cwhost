@@ -1,0 +1,1 @@
+-dialect c -mapcr off -Cpp_exceptions on -RTTI on -bool on -prefix "" -w noillpragmas -w noemptydecl -w nopossible -w nounusedvar -w nounusedarg -w noextracomma -w nopedantic -w nohidevirtual -w nostructclass -opt level=0 -align mac68k -fwritable-strings -tocdata -noschedule
