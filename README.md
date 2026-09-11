@@ -112,9 +112,9 @@ uv run ruff check && uv run ruff format --check && uv run ty check
 ```
 
 ```sh
-# A root from the published image (arm64-only manifest; the container never runs):
+# A root from the published image:
 rm -rf cw-root
-id=$(docker create --platform linux/arm64 ghcr.io/zt-labs/cw-pro-8:8.0 /bin/true)
+id=$(docker create ghcr.io/zt-labs/cw-pro-8:8.0 /bin/true)
 docker cp "$id:/opt/codewarrior/Metrowerks CodeWarrior" cw-root && docker rm "$id"
 CWHOST_CW_ROOT=cw-root uv run pytest
 ```

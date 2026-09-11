@@ -33,9 +33,7 @@ jobs:
       - run: uv sync --frozen
       - name: Fetch CodeWarrior ${{ matrix.codewarrior }}
         run: |
-          # The image is published as linux/arm64 only; the container is never
-          # started, so the platform mismatch on an x64 runner is harmless.
-          id=$(docker create --platform linux/arm64 "ghcr.io/zt-labs/cw-pro-8:${{ matrix.codewarrior }}" /bin/true)
+          id=$(docker create "ghcr.io/zt-labs/cw-pro-8:${{ matrix.codewarrior }}" /bin/true)
           docker cp "$id:/opt/codewarrior/Metrowerks CodeWarrior" "$RUNNER_TEMP/codewarrior"
           docker rm "$id" >/dev/null
       - run: uv run pytest
