@@ -8,15 +8,15 @@ from cwhost.resources import ResourceFork
 from cwhost.vfs import VFS
 
 
-def test_compiler_strings_match_derez(compiler_83):
+def test_compiler_strings_match_derez(compiler_plugin):
     if not shutil.which("DeRez"):
         pytest.skip("DeRez not installed")
     fork = ResourceFork.parse(
-        VFS(build_root=compiler_83.parent).node(compiler_83).resource_fork()
+        VFS(build_root=compiler_plugin.parent).node(compiler_plugin).resource_fork()
     )
     strings = fork.str_list(10100)
     derez = subprocess.run(
-        ["DeRez", "-only", "'STR#'(10100)", str(compiler_83)],
+        ["DeRez", "-only", "'STR#'(10100)", str(compiler_plugin)],
         capture_output=True,
         text=True,
         check=True,
