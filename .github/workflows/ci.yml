@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10.1.0
+        with:
+          python-version: "3.12"
+          enable-cache: true
+      - run: uv sync --frozen
+      - run: uv run ruff check
+      - run: uv run ruff format --check
+      - run: uv run ty check
+
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        codewarrior: ["8.0"]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10.1.0
+        with:
+          python-version: "3.12"
+          enable-cache: true
+      - run: uv sync --frozen
+      - name: Fetch CodeWarrior ${{ matrix.codewarrior }}
+        run: |
+          # The image is published as linux/arm64 only; the container is never
+          # started, so the platform mismatch on an x64 runner is harmless.
+          id=$(docker create --platform linux/arm64 "ghcr.io/zt-labs/cw-pro-8:${{ matrix.codewarrior }}" /bin/true)
+          docker cp "$id:/opt/codewarrior/Metrowerks CodeWarrior" "$RUNNER_TEMP/codewarrior"
+          docker rm "$id" >/dev/null
+      - run: uv run pytest
+        env:
+          CWHOST_CW_ROOT: ${{ runner.temp }}/codewarrior
