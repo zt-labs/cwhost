@@ -23,7 +23,7 @@ def cw_root() -> Path:
 
 
 @pytest.fixture
-def compiler_83(cw_root: Path) -> Path:
+def compiler_plugin(cw_root: Path) -> Path:
     plugin = cw_root / config.PLUGIN
     if not plugin.is_file():
         pytest.skip(f"compiler plug-in not present at {plugin}")

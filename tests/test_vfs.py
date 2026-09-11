@@ -2,12 +2,15 @@ import pytest
 
 from cwhost.appledouble import AppleDouble
 from cwhost.errors import HostError
+from cwhost.resources import ResourceFork
 from cwhost.vfs import VFS, _native_xattr
 
 
-def test_plugin_fork_and_type(compiler_83):
-    n = VFS(build_root=compiler_83.parent).node(compiler_83)
-    assert len(n.resource_fork()) == 22087 and n.type_creator() == (b"Comp", b"CWIE")
+def test_plugin_resource_fork(compiler_plugin):
+    # Not type/creator: the 8.0 plug-in ships with an all-zero Finder info.
+    n = VFS(build_root=compiler_plugin.parent).node(compiler_plugin)
+    fork = ResourceFork.parse(n.resource_fork())
+    assert 10100 in fork.ids(b"STR#")
 
 
 def test_hfs_paths(cw_root):

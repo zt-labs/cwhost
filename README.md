@@ -9,7 +9,8 @@ IDE callbacks and the handful of Carbon routines it imports, and drives the
 compile. The output is byte-identical to what the IDE produces.
 
 `cwhost` contains no Metrowerks code. You need your own CodeWarrior Pro 8
-installation with the 8.2 or 8.3 update applied.
+installation; the prebuilt images at [zt-labs/cw-pro-8](https://github.com/zt-labs/cw-pro-8)
+are one way to get it.
 
 [Unicorn]: https://www.unicorn-engine.org/
 
@@ -17,7 +18,7 @@ installation with the 8.2 or 8.3 update applied.
 
 - Python 3.12 or newer and [uv](https://docs.astral.sh/uv/)
 - A CodeWarrior Pro 8 `Metrowerks CodeWarrior` folder containing:
-  - `CodeWarrior Plugins/Compilers/MW C-C++ PPC` (the 8.2 or 8.3 compiler)
+  - `CodeWarrior Plugins/Compilers/MW C-C++ PPC` (the 8.0, 8.2 or 8.3 compiler)
   - `MSL/` (MSL C, C++ and Extras headers)
   - `MacOS Support/Universal/Interfaces/CIncludes`
 
@@ -92,9 +93,10 @@ compiler diagnostics come back in the result.
 
 ## What works
 
-- The 8.2 and 8.3 `MW C-C++ PPC` plug-ins, C and C++.
+- The 8.0, 8.2 and 8.3 `MW C-C++ PPC` plug-ins, C and C++.
 - Verified by compiling the Metrowerks Standard Library sources and comparing
-  every object against the libraries the IDE built.
+  every object against the libraries the IDE built. CI does this on every
+  change for 8.0 against the library shipped on the CD.
 
 Not supported: the linker (`cwld`), precompiled headers, and IDE callbacks the
 compiler has not been observed to call. An unobserved callback fails with
@@ -107,6 +109,14 @@ uv sync
 uv run pytest                       # tests that need no CodeWarrior are always run
 CWHOST_CW_ROOT=... uv run pytest    # also loads and drives the real plug-in
 uv run ruff check && uv run ruff format --check && uv run ty check
+```
+
+```sh
+# A root from the published image:
+rm -rf cw-root
+id=$(docker create ghcr.io/zt-labs/cw-pro-8:8.0 /bin/true)
+docker cp "$id:/opt/codewarrior/Metrowerks CodeWarrior" cw-root && docker rm "$id"
+CWHOST_CW_ROOT=cw-root uv run pytest
 ```
 
 ## Notice

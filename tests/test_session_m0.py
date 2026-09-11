@@ -4,11 +4,11 @@ from cwhost.session import REQ_INITIALIZE, REQ_TERMINATE, Session, TargetInfo
 from cwhost.vfs import VFS
 
 
-def test_m0(compiler_83, tmp_path):
+def test_m0(compiler_plugin, tmp_path):
     v = VFS(build_root=tmp_path)
     out = v.node(tmp_path / "x.o")
     s = Session(
-        compiler_83,
+        compiler_plugin,
         vfs=v,
         panels={},
         target=TargetInfo(output_type=1, cpu=b"ppc ", os=b"mac ", outfile=out),
